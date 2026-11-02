@@ -1487,7 +1487,7 @@
       editBtnHtml +
       '<div class="day-hero">' +
         '<div class="eyebrow">Day ' + dayNum + ' of ' + days.length + '</div>' +
-        '<div class="day-title">' + escapeHtml(day.weekday) + '</div>' +
+        '<div class="day-title">Day ' + dayNum + ' - ' + escapeHtml(day.weekday) + '</div>' +
         '<div class="day-date">' + escapeHtml(day.date) + '</div>' +
         badgeHtml +
       '</div>' +
@@ -2586,7 +2586,7 @@
       { key: 'cover', icon: '🏝️', label: 'Trip Overview' }
     ];
     days.forEach((d, i) => {
-      rowsData.push({ key: 'day-' + i, icon: '📅', label: 'Day ' + (i + 1) + ' · ' + (d.weekday || '') });
+      rowsData.push({ key: 'day-' + i, icon: '📅', label: 'Day ' + (i + 1) + ' - ' + (d.weekday || '') });
     });
     rowsData.push({ key: 'add-day', icon: '➕', label: 'Add a Day' });
     rowsData.push({ key: 'photos', icon: '📸', label: 'Photos' });
