@@ -899,15 +899,39 @@
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-title" id="flightModalTitle">Edit Details</div>
     <div class="field">
-      <label>Notes</label>
-      <input type="text" id="flNumber" placeholder="e.g. Departing from Miami">
+      <label>Date</label>
+      <input type="text" id="flDate" placeholder="e.g. Sept 24, 2026">
     </div>
     <div class="field">
-      <label>Time (optional)</label>
+      <label>Airline</label>
+      <input type="text" id="flAirline" placeholder="e.g. Delta">
+    </div>
+    <div class="field">
+      <label>Flight Number</label>
+      <input type="text" id="flNumber" placeholder="e.g. DL 1234">
+    </div>
+    <div class="field">
+      <label>Confirmation # (optional)</label>
+      <input type="text" id="flConfirmation" placeholder="e.g. ABC123">
+    </div>
+    <div class="field">
+      <label>Departure Airport</label>
+      <input type="text" id="flDepartAirport" placeholder="e.g. FLL">
+    </div>
+    <div class="field">
+      <label>Departure Time</label>
       <input type="time" id="flDepart">
     </div>
     <div class="field">
-      <label>Address / Additional Notes (optional)</label>
+      <label>Arrival Airport</label>
+      <input type="text" id="flArriveAirport" placeholder="e.g. EYW">
+    </div>
+    <div class="field">
+      <label>Arrival Time</label>
+      <input type="time" id="flArrive">
+    </div>
+    <div class="field">
+      <label>Additional Notes (optional)</label>
       <input type="text" id="flNote" placeholder="e.g. Hotel check-in details">
     </div>
     <div class="modal-actions">
@@ -1630,12 +1654,18 @@
       const t = travel[key];
       const icon = key === 'arrival' ? '🚗' : '🚙';
       let sub;
-      if (!t.flightNumber && !t.depart && !t.note){
+      if (!t.airline && !t.flightNumber && !t.depart && !t.arrive && !t.note){
         sub = 'Tap to add details';
       } else {
         const parts = [];
-        if (t.flightNumber) parts.push(escapeHtml(t.flightNumber));
-        if (t.depart) parts.push(formatTime(t.depart));
+        const airlineFlight = [t.airline, t.flightNumber].filter(Boolean).join(' ');
+        if (airlineFlight) parts.push(escapeHtml(airlineFlight));
+        if (t.departAirport || t.depart){
+          parts.push(escapeHtml([t.departAirport, t.depart ? formatTime(t.depart) : ''].filter(Boolean).join(' ')));
+        }
+        if (t.arriveAirport || t.arrive){
+          parts.push('&rarr; ' + escapeHtml([t.arriveAirport, t.arrive ? formatTime(t.arrive) : ''].filter(Boolean).join(' ')));
+        }
         if (t.note) parts.push(escapeHtml(t.note));
         sub = parts.join(' &middot; ');
       }
@@ -1769,8 +1799,14 @@
   /* ---------------- TRIP DETAIL MODAL ---------------- */
   const flightModalOverlay = document.getElementById('flightModalOverlay');
   const flightModalTitle = document.getElementById('flightModalTitle');
+  const flDate = document.getElementById('flDate');
+  const flAirline = document.getElementById('flAirline');
   const flNumber = document.getElementById('flNumber');
+  const flConfirmation = document.getElementById('flConfirmation');
+  const flDepartAirport = document.getElementById('flDepartAirport');
   const flDepart = document.getElementById('flDepart');
+  const flArriveAirport = document.getElementById('flArriveAirport');
+  const flArrive = document.getElementById('flArrive');
   const flNote = document.getElementById('flNote');
   const flBtnSave = document.getElementById('flBtnSave');
   const flBtnCancel = document.getElementById('flBtnCancel');
@@ -1781,8 +1817,14 @@
     editingFlightKey = key;
     const t = travel[key];
     flightModalTitle.textContent = 'Edit ' + t.label + ' Details';
+    flDate.value = t.date || '';
+    flAirline.value = t.airline || '';
     flNumber.value = t.flightNumber || '';
+    flConfirmation.value = t.confirmation || '';
+    flDepartAirport.value = t.departAirport || '';
     flDepart.value = t.depart || '';
+    flArriveAirport.value = t.arriveAirport || '';
+    flArrive.value = t.arrive || '';
     flNote.value = t.note || '';
     flightModalOverlay.classList.add('open');
   }
@@ -1799,8 +1841,14 @@
     e.stopPropagation();
     if (!editingFlightKey) return;
     const t = travel[editingFlightKey];
+    t.date = flDate.value.trim();
+    t.airline = flAirline.value.trim();
     t.flightNumber = flNumber.value.trim();
+    t.confirmation = flConfirmation.value.trim();
+    t.departAirport = flDepartAirport.value.trim();
     t.depart = flDepart.value || '';
+    t.arriveAirport = flArriveAirport.value.trim();
+    t.arrive = flArrive.value || '';
     t.note = flNote.value.trim();
     renderTravel();
     closeFlightModal();
