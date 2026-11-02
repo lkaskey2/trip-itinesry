@@ -185,11 +185,6 @@
     font-size:12.5px; font-weight:600; color: var(--coral);
     text-align:right; white-space:nowrap;
   }
-  .agenda-row .flight-left{ min-width:0; flex:1; }
-  .agenda-row .flight-left > div{ min-width:0; flex:1; }
-  .agenda-row .flight-sub{
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
 
   /* ---------- DAY CARD ---------- */
   .day-hero{ text-align:center; margin-bottom:20px; }
@@ -839,10 +834,6 @@
       <div class="travel-card" id="stayCard" style="margin-top:12px;"></div>
       <div class="day-hint">Tap to edit</div>
 
-      <div class="section-label" style="margin-top:28px;"><div class="dot"></div><span>Agenda</span></div>
-      <div class="travel-card" id="agendaCard"></div>
-      <div class="day-hint">Tap a day to open it</div>
-
       <div class="tap-hint">tap anywhere to begin &rarr;</div>
     </div>
 
@@ -1401,7 +1392,6 @@
     renderCover();
     renderTravel();
     renderStay();
-    renderAgenda();
     renderPhotos();
     renderReflections();
     renderNotes();
@@ -1545,7 +1535,6 @@
 
   function renderAllDays(){
     days.forEach((_, i) => renderDay(i));
-    renderAgenda();
   }
 
   /* ---------------- ADD / EDIT DAY MODAL ----------------
@@ -1616,7 +1605,6 @@
       d.badge = badge || null;
       d.badgeLabel = badgeLabel;
       renderDay(editingDayHeaderIdx);
-      renderAgenda();
       renderTOC();
       closeAddDayModal();
       saveToSheet();
@@ -1852,7 +1840,6 @@
       renderCover();
       renderTravel();
       renderStay();
-      renderAgenda();
       renderTripSelectPage();
       closeTripModal();
       saveToSheet();
@@ -1955,42 +1942,6 @@
     });
   }
 
-  function renderAgenda(){
-    const card = document.getElementById('agendaCard');
-    if (!card) return;
-    const rows = days.map((d, i) => {
-      let sub;
-      if (!d.events || !d.events.length){
-        sub = 'No events yet';
-      } else {
-        sub = d.events
-          .slice()
-          .sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99'))
-          .map(ev => (ev.icon ? ev.icon + ' ' : '') + escapeHtml(ev.title))
-          .join('  &middot;  ');
-      }
-      const name = escapeHtml(d.weekday || ('Day ' + (i + 1))) + (d.badgeLabel ? ' &middot; ' + escapeHtml(d.badgeLabel) : '');
-      return '<div class="flight-row agenda-row" data-day="' + i + '">' +
-        '<div class="flight-left">' +
-          '<div class="flight-icon">📅</div>' +
-          '<div>' +
-            '<div class="flight-name">' + name + '</div>' +
-            '<div class="flight-sub">' + sub + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="flight-date">' + escapeHtml(d.date || '') + '</div>' +
-      '</div>';
-    }).join('');
-    card.innerHTML = rows;
-    card.querySelectorAll('.agenda-row').forEach(el => {
-      el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        gotoKey('day-' + el.dataset.day);
-        render();
-      });
-    });
-  }
-
   /* ---------------- EVENT MODAL ---------------- */
   const modalOverlay = document.getElementById('modalOverlay');
   const modalTitle = document.getElementById('modalTitle');
@@ -2071,7 +2022,6 @@
       Object.assign(ev, data);
     }
     renderDay(editingDayIdx);
-    renderAgenda();
     closeModal();
     saveToSheet();
   });
@@ -2081,7 +2031,6 @@
     if (editingEventId !== null){
       days[editingDayIdx].events = days[editingDayIdx].events.filter(e => e.id !== editingEventId);
       renderDay(editingDayIdx);
-      renderAgenda();
     }
     closeModal();
     saveToSheet();
@@ -2685,7 +2634,6 @@
     renderCover();
     renderTravel();
     renderStay();
-    renderAgenda();
     renderPhotos();
     renderReflections();
     renderNotes();
@@ -2817,7 +2765,6 @@
   renderCover();
   renderTravel();
   renderStay();
-  renderAgenda();
   renderPhotos();
   renderReflections();
   renderNotes();
