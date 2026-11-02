@@ -800,15 +800,13 @@
           <div class="chip">🚗 Depart Sept 27</div>
         </div>
       </div>
-      <div class="tap-hint">tap anywhere to begin &rarr;</div>
-    </div>
 
-    <!-- PAGE 1: TRIP DETAILS -->
-    <div class="page" data-page="2" data-key="travel">
-      <div class="section-label"><div class="dot"></div><span>Trip Details</span></div>
+      <div class="section-label" style="margin-top:28px;"><div class="dot"></div><span>Trip Details</span></div>
       <div class="travel-card" id="travelCard"></div>
       <div class="travel-card" id="stayCard" style="margin-top:12px;"></div>
       <div class="day-hint">Tap to edit</div>
+
+      <div class="tap-hint">tap anywhere to begin &rarr;</div>
     </div>
 
     <!-- DAY PAGES (generated dynamically by JS, variable count per trip) -->
@@ -2513,8 +2511,7 @@
     const list = document.getElementById('tocList');
     const rowsData = [
       { key: 'trip-select', icon: '🧳', label: 'Switch Trip' },
-      { key: 'cover', icon: '🏝️', label: 'Cover' },
-      { key: 'travel', icon: '🚗', label: 'Trip Details' }
+      { key: 'cover', icon: '🏝️', label: 'Trip Overview' }
     ];
     days.forEach((d, i) => {
       rowsData.push({ key: 'day-' + i, icon: '📅', label: 'Day ' + (i + 1) + ' · ' + (d.weekday || '') });
