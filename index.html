@@ -368,6 +368,16 @@
     color: var(--ink); margin-bottom:16px; text-align:center;
   }
   .field{ margin-bottom:14px; }
+  .modal-subhead{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:15px;
+    color: var(--coral);
+    margin:20px 0 10px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .modal-subhead:first-of-type{ margin-top:16px; }
   .field label{
     display:block; font-size:11.5px; font-weight:700;
     letter-spacing:0.05em; text-transform:uppercase;
@@ -1044,6 +1054,97 @@
       <label>Date Range (optional)</label>
       <input type="text" id="tripSubdate" placeholder="e.g. March 12 &ndash; 16, 2026">
     </div>
+
+    <div class="modal-subhead">🛬 Arrival</div>
+    <div class="field">
+      <label>Date</label>
+      <input type="text" id="tripArrDate" placeholder="e.g. Mar 12, 2026">
+    </div>
+    <div class="field">
+      <label>Airline</label>
+      <input type="text" id="tripArrAirline" placeholder="e.g. Delta">
+    </div>
+    <div class="field">
+      <label>Flight Number</label>
+      <input type="text" id="tripArrFlight" placeholder="e.g. DL 1234">
+    </div>
+    <div class="field">
+      <label>Confirmation # (optional)</label>
+      <input type="text" id="tripArrConfirmation" placeholder="e.g. ABC123">
+    </div>
+    <div class="field">
+      <label>Departure Airport</label>
+      <input type="text" id="tripArrDepartAirport" placeholder="e.g. FLL">
+    </div>
+    <div class="field">
+      <label>Departure Time</label>
+      <input type="time" id="tripArrDepartTime">
+    </div>
+    <div class="field">
+      <label>Arrival Airport</label>
+      <input type="text" id="tripArrArriveAirport" placeholder="e.g. EYW">
+    </div>
+    <div class="field">
+      <label>Arrival Time</label>
+      <input type="time" id="tripArrArriveTime">
+    </div>
+    <div class="field">
+      <label>Additional Notes (optional)</label>
+      <input type="text" id="tripArrNote" placeholder="e.g. Hotel check-in details">
+    </div>
+
+    <div class="modal-subhead">🛫 Departure</div>
+    <div class="field">
+      <label>Date</label>
+      <input type="text" id="tripDepDate" placeholder="e.g. Mar 16, 2026">
+    </div>
+    <div class="field">
+      <label>Airline</label>
+      <input type="text" id="tripDepAirline" placeholder="e.g. Delta">
+    </div>
+    <div class="field">
+      <label>Flight Number</label>
+      <input type="text" id="tripDepFlight" placeholder="e.g. DL 5678">
+    </div>
+    <div class="field">
+      <label>Confirmation # (optional)</label>
+      <input type="text" id="tripDepConfirmation" placeholder="e.g. ABC123">
+    </div>
+    <div class="field">
+      <label>Departure Airport</label>
+      <input type="text" id="tripDepDepartAirport" placeholder="e.g. EYW">
+    </div>
+    <div class="field">
+      <label>Departure Time</label>
+      <input type="time" id="tripDepDepartTime">
+    </div>
+    <div class="field">
+      <label>Arrival Airport</label>
+      <input type="text" id="tripDepArriveAirport" placeholder="e.g. FLL">
+    </div>
+    <div class="field">
+      <label>Arrival Time</label>
+      <input type="time" id="tripDepArriveTime">
+    </div>
+    <div class="field">
+      <label>Additional Notes (optional)</label>
+      <input type="text" id="tripDepNote" placeholder="e.g. Return rental car">
+    </div>
+
+    <div class="modal-subhead">🏨 Where We're Staying</div>
+    <div class="field">
+      <label>Hotel / Place Name</label>
+      <input type="text" id="tripStayHotel" placeholder="e.g. Winslow Bungalow">
+    </div>
+    <div class="field">
+      <label>Nights</label>
+      <input type="text" id="tripStayNights" placeholder="e.g. 3 nights">
+    </div>
+    <div class="field">
+      <label>Type (optional)</label>
+      <input type="text" id="tripStayType" placeholder="e.g. Weekend getaway">
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-cancel" id="tripBtnCancel">Cancel</button>
       <button class="btn btn-save" id="tripBtnSave">Save</button>
@@ -1504,6 +1605,27 @@
   const tripName = document.getElementById('tripName');
   const tripEyebrow = document.getElementById('tripEyebrow');
   const tripSubdate = document.getElementById('tripSubdate');
+  const tripArrDate = document.getElementById('tripArrDate');
+  const tripArrAirline = document.getElementById('tripArrAirline');
+  const tripArrFlight = document.getElementById('tripArrFlight');
+  const tripArrConfirmation = document.getElementById('tripArrConfirmation');
+  const tripArrDepartAirport = document.getElementById('tripArrDepartAirport');
+  const tripArrDepartTime = document.getElementById('tripArrDepartTime');
+  const tripArrArriveAirport = document.getElementById('tripArrArriveAirport');
+  const tripArrArriveTime = document.getElementById('tripArrArriveTime');
+  const tripArrNote = document.getElementById('tripArrNote');
+  const tripDepDate = document.getElementById('tripDepDate');
+  const tripDepAirline = document.getElementById('tripDepAirline');
+  const tripDepFlight = document.getElementById('tripDepFlight');
+  const tripDepConfirmation = document.getElementById('tripDepConfirmation');
+  const tripDepDepartAirport = document.getElementById('tripDepDepartAirport');
+  const tripDepDepartTime = document.getElementById('tripDepDepartTime');
+  const tripDepArriveAirport = document.getElementById('tripDepArriveAirport');
+  const tripDepArriveTime = document.getElementById('tripDepArriveTime');
+  const tripDepNote = document.getElementById('tripDepNote');
+  const tripStayHotel = document.getElementById('tripStayHotel');
+  const tripStayNights = document.getElementById('tripStayNights');
+  const tripStayType = document.getElementById('tripStayType');
   const tripBtnSave = document.getElementById('tripBtnSave');
   const tripBtnCancel = document.getElementById('tripBtnCancel');
   const tripPhotoPick = document.getElementById('tripPhotoPick');
@@ -1590,6 +1712,11 @@
       tripSubdate.value = '';
       tripExistingPhotoUrl = null;
       resetTripPhotoPreview();
+      fillTripFlightFields(tripArrDate, tripArrAirline, tripArrFlight, tripArrConfirmation, tripArrDepartAirport, tripArrDepartTime, tripArrArriveAirport, tripArrArriveTime, tripArrNote, null);
+      fillTripFlightFields(tripDepDate, tripDepAirline, tripDepFlight, tripDepConfirmation, tripDepDepartAirport, tripDepDepartTime, tripDepArriveAirport, tripDepArriveTime, tripDepNote, null);
+      tripStayHotel.value = '';
+      tripStayNights.value = '';
+      tripStayType.value = '';
     } else {
       const t = trips[key];
       tripModalTitle.textContent = 'Edit Trip';
@@ -1599,8 +1726,25 @@
       tripExistingPhotoUrl = t.cover.photoUrl || null;
       if (tripExistingPhotoUrl) showTripPhotoPreview(tripExistingPhotoUrl);
       else resetTripPhotoPreview();
+      fillTripFlightFields(tripArrDate, tripArrAirline, tripArrFlight, tripArrConfirmation, tripArrDepartAirport, tripArrDepartTime, tripArrArriveAirport, tripArrArriveTime, tripArrNote, t.travel.arrival);
+      fillTripFlightFields(tripDepDate, tripDepAirline, tripDepFlight, tripDepConfirmation, tripDepDepartAirport, tripDepDepartTime, tripDepArriveAirport, tripDepArriveTime, tripDepNote, t.travel.departure);
+      tripStayHotel.value = (t.stay && t.stay.hotel) || '';
+      tripStayNights.value = (t.stay && t.stay.nights) || '';
+      tripStayType.value = (t.stay && t.stay.type) || '';
     }
     tripModalOverlay.classList.add('open');
+  }
+
+  function fillTripFlightFields(dateEl, airlineEl, flightEl, confEl, depAirportEl, depTimeEl, arrAirportEl, arrTimeEl, noteEl, t){
+    dateEl.value = (t && t.date) || '';
+    airlineEl.value = (t && t.airline) || '';
+    flightEl.value = (t && t.flightNumber) || '';
+    confEl.value = (t && t.confirmation) || '';
+    depAirportEl.value = (t && t.departAirport) || '';
+    depTimeEl.value = (t && t.depart) || '';
+    arrAirportEl.value = (t && t.arriveAirport) || '';
+    arrTimeEl.value = (t && t.arrive) || '';
+    noteEl.value = (t && t.note) || '';
   }
 
   function closeTripModal(){
@@ -1622,17 +1766,37 @@
     return key;
   }
 
+  function readTripFlightFields(dateEl, airlineEl, flightEl, confEl, depAirportEl, depTimeEl, arrAirportEl, arrTimeEl, noteEl, label){
+    return {
+      label: label,
+      date: dateEl.value.trim(),
+      airline: airlineEl.value.trim(),
+      flightNumber: flightEl.value.trim(),
+      confirmation: confEl.value.trim(),
+      departAirport: depAirportEl.value.trim(),
+      depart: depTimeEl.value || '',
+      arriveAirport: arrAirportEl.value.trim(),
+      arrive: arrTimeEl.value || '',
+      note: noteEl.value.trim()
+    };
+  }
+
   tripBtnSave.addEventListener('click', (e) => {
     e.stopPropagation();
     const name = tripName.value.trim();
     if (!name){ tripName.focus(); return; }
     const photoUrl = tripPendingPhotoUrl || tripExistingPhotoUrl || '';
+    const arrivalData = readTripFlightFields(tripArrDate, tripArrAirline, tripArrFlight, tripArrConfirmation, tripArrDepartAirport, tripArrDepartTime, tripArrArriveAirport, tripArrArriveTime, tripArrNote, 'Arrival');
+    const departureData = readTripFlightFields(tripDepDate, tripDepAirline, tripDepFlight, tripDepConfirmation, tripDepDepartAirport, tripDepDepartTime, tripDepArriveAirport, tripDepArriveTime, tripDepNote, 'Departure');
+    const stayData = { hotel: tripStayHotel.value.trim(), nights: tripStayNights.value.trim(), type: tripStayType.value.trim() };
 
     if (editingTripKey === null){
       const key = slugify(name);
       trips[key] = makeTrip({
         name: name,
-        cover: { eyebrow: tripEyebrow.value.trim(), title: name, subdate: tripSubdate.value.trim(), chips: [], photoUrl: photoUrl }
+        cover: { eyebrow: tripEyebrow.value.trim(), title: name, subdate: tripSubdate.value.trim(), chips: [], photoUrl: photoUrl },
+        travel: { arrival: arrivalData, departure: departureData },
+        stay: stayData
       });
       closeTripModal();
       switchToTrip(key);
@@ -1645,7 +1809,13 @@
       t.cover.title = name;
       t.cover.subdate = tripSubdate.value.trim();
       t.cover.photoUrl = photoUrl;
+      t.travel.arrival = arrivalData;
+      t.travel.departure = departureData;
+      t.stay = stayData;
+      if (editingTripKey === activeTripKey) bindActiveTrip();
       renderCover();
+      renderTravel();
+      renderStay();
       renderTripSelectPage();
       closeTripModal();
       saveToSheet();
