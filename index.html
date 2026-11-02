@@ -1231,7 +1231,7 @@
     return Object.assign({
       name: 'New Trip',
       cover: { eyebrow: '', title: 'New Trip', subdate: '', chips: [], photoUrl: '', titleColor: '' },
-      days: [ { weekday: 'Day 1', date: '', badge: null, badgeLabel: '', events: [] } ],
+      days: [ { weekday: '', date: '', badge: null, badgeLabel: '', events: [] } ],
       travel: {
         arrival: { label: 'Arrival', date: '', flightNumber: '', depart: '', arrive: '', note: '' },
         departure: { label: 'Departure', date: '', flightNumber: '', depart: '', arrive: '', note: '' }
@@ -1451,6 +1451,15 @@
     return d.innerHTML;
   }
 
+  // Builds "Day N - Weekday" for a day header, but avoids a redundant
+  // "Day N - Day N" when the weekday field is blank or itself just says "Day N"
+  // (which happens for days created before a real weekday name was entered).
+  function dayLabel(d, dayNum){
+    const w = (d.weekday || '').trim();
+    const isPlaceholder = !w || /^day\s*\d+$/i.test(w);
+    return isPlaceholder ? ('Day ' + dayNum) : ('Day ' + dayNum + ' - ' + w);
+  }
+
   /* ---------------- RENDER DAY PAGES ---------------- */
   function renderDay(dayIdx){
     const day = days[dayIdx];
@@ -1487,7 +1496,7 @@
       editBtnHtml +
       '<div class="day-hero">' +
         '<div class="eyebrow">Day ' + dayNum + ' of ' + days.length + '</div>' +
-        '<div class="day-title">Day ' + dayNum + ' - ' + escapeHtml(day.weekday) + '</div>' +
+        '<div class="day-title">' + escapeHtml(dayLabel(day, dayNum)) + '</div>' +
         '<div class="day-date">' + escapeHtml(day.date) + '</div>' +
         badgeHtml +
       '</div>' +
@@ -1586,7 +1595,7 @@
 
     if (editingDayHeaderIdx === null){
       days.push({
-        weekday: adWeekday.value.trim() || ('Day ' + (days.length + 1)),
+        weekday: adWeekday.value.trim(),
         date: adDate.value.trim(),
         badge: badge || null,
         badgeLabel: badgeLabel,
@@ -2586,7 +2595,7 @@
       { key: 'cover', icon: '🏝️', label: 'Trip Overview' }
     ];
     days.forEach((d, i) => {
-      rowsData.push({ key: 'day-' + i, icon: '📅', label: 'Day ' + (i + 1) + ' - ' + (d.weekday || '') });
+      rowsData.push({ key: 'day-' + i, icon: '📅', label: dayLabel(d, i + 1) });
     });
     rowsData.push({ key: 'add-day', icon: '➕', label: 'Add a Day' });
     rowsData.push({ key: 'photos', icon: '📸', label: 'Photos' });
