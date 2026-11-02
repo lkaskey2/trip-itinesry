@@ -1022,6 +1022,13 @@
       <label>Date Range (optional)</label>
       <input type="text" id="tripSubdate" placeholder="e.g. March 12 &ndash; 16, 2026">
     </div>
+    <div class="field">
+      <label>Title Color (optional)</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="color" id="tripTitleColorPicker" value="#e8694a" style="width:48px; height:40px; padding:2px; border-radius:10px; border:1px solid var(--line); background:var(--sand-deep);">
+        <input type="text" id="tripTitleColor" placeholder="e.g. #FCD116" style="flex:1;">
+      </div>
+    </div>
 
     <div class="modal-subhead">🛬 Arrival</div>
     <div class="field">
@@ -1186,7 +1193,7 @@
   function makeTrip(overrides){
     return Object.assign({
       name: 'New Trip',
-      cover: { eyebrow: '', title: 'New Trip', subdate: '', chips: [], photoUrl: '' },
+      cover: { eyebrow: '', title: 'New Trip', subdate: '', chips: [], photoUrl: '', titleColor: '' },
       days: [ { weekday: 'Day 1', date: '', badge: null, badgeLabel: '', events: [] } ],
       travel: {
         arrival: { label: 'Arrival', date: '', flightNumber: '', depart: '', arrive: '', note: '' },
@@ -1573,6 +1580,13 @@
   const tripName = document.getElementById('tripName');
   const tripEyebrow = document.getElementById('tripEyebrow');
   const tripSubdate = document.getElementById('tripSubdate');
+  const tripTitleColor = document.getElementById('tripTitleColor');
+  const tripTitleColorPicker = document.getElementById('tripTitleColorPicker');
+  tripTitleColorPicker.addEventListener('input', () => { tripTitleColor.value = tripTitleColorPicker.value; });
+  tripTitleColor.addEventListener('input', () => {
+    const v = tripTitleColor.value.trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(v)) tripTitleColorPicker.value = v;
+  });
   const tripArrDate = document.getElementById('tripArrDate');
   const tripArrAirline = document.getElementById('tripArrAirline');
   const tripArrFlight = document.getElementById('tripArrFlight');
@@ -1678,6 +1692,8 @@
       tripName.value = '';
       tripEyebrow.value = '';
       tripSubdate.value = '';
+      tripTitleColor.value = '';
+      tripTitleColorPicker.value = '#e8694a';
       tripExistingPhotoUrl = null;
       resetTripPhotoPreview();
       fillTripFlightFields(tripArrDate, tripArrAirline, tripArrFlight, tripArrConfirmation, tripArrDepartAirport, tripArrDepartTime, tripArrArriveAirport, tripArrArriveTime, tripArrNote, null);
@@ -1691,6 +1707,8 @@
       tripName.value = t.name || '';
       tripEyebrow.value = t.cover.eyebrow || '';
       tripSubdate.value = t.cover.subdate || '';
+      tripTitleColor.value = t.cover.titleColor || '';
+      tripTitleColorPicker.value = /^#[0-9a-fA-F]{6}$/.test(t.cover.titleColor || '') ? t.cover.titleColor : '#e8694a';
       tripExistingPhotoUrl = t.cover.photoUrl || null;
       if (tripExistingPhotoUrl) showTripPhotoPreview(tripExistingPhotoUrl);
       else resetTripPhotoPreview();
@@ -1762,7 +1780,7 @@
       const key = slugify(name);
       trips[key] = makeTrip({
         name: name,
-        cover: { eyebrow: tripEyebrow.value.trim(), title: name, subdate: tripSubdate.value.trim(), chips: [], photoUrl: photoUrl },
+        cover: { eyebrow: tripEyebrow.value.trim(), title: name, subdate: tripSubdate.value.trim(), chips: [], photoUrl: photoUrl, titleColor: tripTitleColor.value.trim() },
         travel: { arrival: arrivalData, departure: departureData },
         stay: stayData
       });
@@ -1776,6 +1794,7 @@
       t.cover.eyebrow = tripEyebrow.value.trim();
       t.cover.title = name;
       t.cover.subdate = tripSubdate.value.trim();
+      t.cover.titleColor = tripTitleColor.value.trim();
       t.cover.photoUrl = photoUrl;
       t.travel.arrival = arrivalData;
       t.travel.departure = departureData;
@@ -1801,6 +1820,7 @@
     document.getElementById('coverEyebrow').textContent = cover.eyebrow || '';
     document.getElementById('coverEyebrow').style.display = cover.eyebrow ? '' : 'none';
     document.getElementById('coverTitle').innerHTML = escapeHtml(cover.title || trips[activeTripKey].name).replace(/\n/g, '<br>');
+    document.getElementById('coverTitle').style.color = cover.titleColor || '';
     document.getElementById('coverSubdate').textContent = cover.subdate || '';
     document.getElementById('coverSubdate').style.display = cover.subdate ? '' : 'none';
     const chipsEl = document.getElementById('coverChips');
