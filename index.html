@@ -143,6 +143,34 @@
     color: var(--ink-soft);
     letter-spacing:0.03em;
   }
+  .cover-summary{
+    margin-top:20px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .cover-summary-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:13.5px;
+    color: var(--ink);
+    text-align:left;
+  }
+  .cover-summary-row .cs-icon{
+    flex-shrink:0;
+    font-size:15px;
+    line-height:1.4;
+  }
+  .cover-summary-row .cs-label{
+    font-weight:700;
+    color: var(--ink);
+  }
+  .cover-summary-row .cs-detail{
+    color: var(--ink-soft);
+  }
 
   .section-label{ margin: 0 4px 12px; display:flex; align-items:center; gap:10px; }
   .section-label .dot{ width:7px; height:7px; border-radius:50%; background: var(--coral); flex-shrink:0; }
@@ -790,6 +818,7 @@
           <div class="chip">🌴 4 Days in Paradise</div>
           <div class="chip">🚗 Depart Sept 27</div>
         </div>
+        <div class="cover-summary" id="coverSummary"></div>
       </div>
       <div class="tap-hint">tap anywhere to begin &rarr;</div>
     </div>
@@ -1646,6 +1675,55 @@
     }
     document.getElementById('tocTitle').textContent = trips[activeTripKey].name;
     document.title = trips[activeTripKey].name;
+    renderCoverSummary();
+  }
+
+  function renderCoverSummary(){
+    const el = document.getElementById('coverSummary');
+    if (!el) return;
+    const rows = [];
+
+    ['arrival', 'departure'].forEach(key => {
+      const t = travel[key];
+      if (!t) return;
+      const hasInfo = t.date || t.airline || t.flightNumber || t.depart || t.arrive || t.departAirport || t.arriveAirport || t.note;
+      if (!hasInfo) return;
+      const icon = key === 'arrival' ? '🛬' : '🛫';
+      const bits = [];
+      if (t.date) bits.push(escapeHtml(t.date));
+      const airlineFlight = [t.airline, t.flightNumber].filter(Boolean).join(' ');
+      if (airlineFlight) bits.push(escapeHtml(airlineFlight));
+      if (t.departAirport || t.depart){
+        bits.push(escapeHtml([t.departAirport, t.depart ? formatTime(t.depart) : ''].filter(Boolean).join(' ')));
+      }
+      if (t.arriveAirport || t.arrive){
+        bits.push('&rarr; ' + escapeHtml([t.arriveAirport, t.arrive ? formatTime(t.arrive) : ''].filter(Boolean).join(' ')));
+      }
+      rows.push(
+        '<div class="cover-summary-row"><div class="cs-icon">' + icon + '</div><div>' +
+        '<span class="cs-label">' + escapeHtml(t.label) + ':</span> ' +
+        '<span class="cs-detail">' + (bits.join(' &middot; ') || 'Details added') + '</span>' +
+        '</div></div>'
+      );
+    });
+
+    if (stay && (stay.hotel || stay.nights || stay.type)){
+      const bits = [stay.nights, stay.type].filter(Boolean).map(escapeHtml);
+      rows.push(
+        '<div class="cover-summary-row"><div class="cs-icon">🏨</div><div>' +
+        '<span class="cs-label">' + (stay.hotel ? escapeHtml(stay.hotel) : 'Stay') + '</span>' +
+        (bits.length ? ' &middot; <span class="cs-detail">' + bits.join(' &middot; ') + '</span>' : '') +
+        '</div></div>'
+      );
+    }
+
+    if (rows.length){
+      el.style.display = '';
+      el.innerHTML = rows.join('');
+    } else {
+      el.style.display = 'none';
+      el.innerHTML = '';
+    }
   }
 
   function renderTravel(){
@@ -1851,6 +1929,7 @@
     t.arrive = flArrive.value || '';
     t.note = flNote.value.trim();
     renderTravel();
+    renderCoverSummary();
     closeFlightModal();
     saveToSheet();
   });
@@ -1883,6 +1962,7 @@
     stay.nights = stNights.value.trim();
     stay.type = stType.value.trim();
     renderStay();
+    renderCoverSummary();
     closeStayModal();
     saveToSheet();
   });
